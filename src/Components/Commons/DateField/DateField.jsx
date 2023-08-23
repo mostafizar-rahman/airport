@@ -3,7 +3,7 @@ import { format } from "date-fns";
 
 const DateField = ({ date, selectedOption, selectedDay }) => {
   return (
-    <div className="">
+    <div className="flex  border rounded-[1rem] col-span-12 md:col-span-6 lg:col-span-3 cursor-pointer">
       <div
         className={`flex flex-col justify-center ${
           selectedOption === "multyCity"

@@ -100,7 +100,7 @@ const App = () => {
         <div className="pt-4 pb-3">
           <div className="grid grid-cols-12 gap-3">
             <SelectField />
-            <div className="relative flex  border rounded-[1rem] col-span-12 md:col-span-6 lg:col-span-3 cursor-pointer">
+            <div className="relative col-span-12 md:col-span-6 lg:col-span-3">
               <DateField
                 date={"defaultDate"}
                 selectedDay={selectedDay}
