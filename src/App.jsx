@@ -24,9 +24,9 @@ const App = () => {
   const copyElementRef = useRef();
 
   const today = startOfToday();
-  const newDate = addDays(new Date(), 1);
+  const prevDate = addDays(new Date(),  1);
   const [selectedDay, setSelectedDay] = useState(today);
-  const [affterDate, setAffterDate] = useState(newDate);
+  const [returnDate, setReturnDate] = useState(prevDate);
   const [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
   const firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
 
@@ -52,12 +52,16 @@ const App = () => {
   const handleCopiedMultyCity = () => {
     const newMultyCityRef = multyCityRef.current.innerHTML;
     console.log(newMultyCityRef);
-    // copyElementRef.current.appendChild(newMultyCityRef);
-    // setCopiedMultyCity(...copiedMultyCity, newMultyCityRef);
 
-    const clonedElementsCopy = [...copiedMultyCity];
-    clonedElementsCopy.push(newMultyCityRef);
-    setCopiedMultyCity(clonedElementsCopy);
+    newMultyCityRef.onclick = multyCityRef.current.onclick;
+    console.log(click);
+
+    copyElementRef.current.appendChild(newMultyCityRef);
+    // newMultyCityRef.onClick = click;
+
+    // const clonedElementsCopy = [...copiedMultyCity];
+    // clonedElementsCopy.push(newMultyCityRef);
+    // setCopiedMultyCity(clonedElementsCopy);
   };
 
   console.log(copiedMultyCity);
@@ -112,16 +116,24 @@ const App = () => {
               days={days}
               firstDayCurrentMonth={firstDayCurrentMonth}
               setSelectedDay={setSelectedDay}
+              returnDate={returnDate}
+              setReturnDate={setReturnDate}
             />
 
             <PersonCountField />
           </div>
         </div>
         {/* --- Copyed elements */}
-        {selectedOption === "multyCity" &&
-          copiedMultyCity.map((html, index) => (
-            <div className="pb-3" key={index} dangerouslySetInnerHTML={{ __html: html }} />
-          ))}
+        {selectedOption === "multyCity" && (
+          // copiedMultyCity.map((html, index) => (
+          //   <div
+          //     className="pb-3"
+          //     key={index}
+          //     dangerouslySetInnerHTML={{ __html: html }}
+          //   />
+          // ))
+          <div ref={copyElementRef}></div>
+        )}
 
         {/* -- Default field for multy city radio button */}
         {selectedOption === "multyCity" && (

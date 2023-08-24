@@ -6,38 +6,44 @@ const SelectField = ({ radiobuttonValue }) => {
   const [dropDown2, setDropDown2] = useState(false);
   const [cityList, setCityList] = useState([]);
   const [airportsList, setAirportsList] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [from, setForm] = useState({
     cityName: "Select A City",
     airportName: "Click to choose an airport",
   });
   const [to, setTo] = useState({
-    cityName: "Select A City 2",
+    cityName: "Select A City",
     airportName: "Click to choose an airport",
   });
 
-  const cityRef = useRef();
-  const airportRef = useRef();
+  const fromCityRef = useRef();
+  const toCityRef = useRef();
+  const fromAirportRef = useRef();
+  const toAirportRef = useRef();
 
-  useEffect(() => {
-    fetch(
-      "http://api.aviationstack.com/v1/cities?access_key=76c795fba0f1f230f3768a70454cb72b"
-    )
-      .then((res) => res.json())
-      .then((data) => setCityList(data.data))
-      .catch((err) => console.log(err));
+  // useEffect(() => {
+  //   fetch(
+  //     "http://api.aviationstack.com/v1/cities?access_key=76c795fba0f1f230f3768a70454cb72b"
+  //   )
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setLoading(true);
+  //       console.log(data);
+  //       // setCityList(data?.data);
+  //       setLoading(false);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
+  // fetch(
+  //   "http://api.aviationstack.com/v1/airports?access_key=76c795fba0f1f230f3768a70454cb72b"
+  // )
+  //   .then((res) => res.json())
+  //   .then((data) => setAirportsList(data.data))
+  //   .catch((err) => console.log(err));
+  console.log(cityList);
+  // console.log(airportsList);
 
-    fetch(
-      "http://api.aviationstack.com/v1/airports?access_key=76c795fba0f1f230f3768a70454cb72b"
-    )
-      .then((res) => res.json())
-      .then((data) => setAirportsList(data.data))
-      .catch((err) => console.log(err));
-  }, []);
-  // cityList?.forEach(({ city_name }) =>
-  //     setForm({ ...from, cityName: city_name })
-  //   );
-  console.log(airportsList);
-
+  // ----- Switch from and to value
   const handleReverseCity = () => {
     if (from) {
       setForm(to);
@@ -47,24 +53,40 @@ const SelectField = ({ radiobuttonValue }) => {
     }
   };
 
+  // ------- Get airport and city list value and show select field
   const handleSelectFormAirport = () => {
-    const airportName = airportRef.current.innerText;
-    const cityName = cityRef.current.innerText;
+    const airportName = fromAirportRef.current.innerText;
+    const cityName = fromCityRef.current.innerText;
+    console.log(airportName)
     setForm({ airportName, cityName });
     setDropDown(false);
   };
   const handleSelectToAirport = () => {
-    const airportName = airportRef.current.innerText;
-    const cityName = cityRef.current.innerText;
+    const airportName = toAirportRef.current.innerText;
+    const cityName = toCityRef.current.innerText;
     setTo({ airportName, cityName });
     setDropDown2(false);
+  };
+
+  // ------ Dropdown for show airport and city list
+  const handleToDropdown = () => {
+    if (dropDown) {
+      setDropDown(false);
+    }
+    setDropDown2(!dropDown2);
+  };
+  const handleFromDropdown = () => {
+    if (dropDown2) {
+      setDropDown2(false);
+    }
+    setDropDown(!dropDown);
   };
 
   return (
     <div className=" flex col-span-12 lg:col-span-6  ">
       <div className="relative w-1/2">
         <div
-          onClick={() => setDropDown(!dropDown)}
+          onClick={handleFromDropdown}
           className={`w-full flex flex-col justify-center border rounded-[1rem] px-3 py-1 cursor-pointer text-secondary ${
             dropDown ? "bg-gray-100" : ""
           }`}
@@ -110,45 +132,52 @@ const SelectField = ({ radiobuttonValue }) => {
               placeholder="Search here......."
               className="border-none py-2 px-3 rounded-tl-md rounded-tr-md outline-none focus:border-none focus:outline-none ring-0 focus:ring-0 text-sm"
             />
-            <button
-              onClick={handleSelectFormAirport}
-              className="px-3 py-1 hover:bg-gray-200 flex items-center justify-between w-full border-b cursor-pointer "
-            >
-              <div className="left flex items-start flex-col">
-                <p className="text-xs font-bold ">
-                  <span ref={cityRef}>Anaa</span>, French Polynesia
-                </p>
-                <p className="text-xs" ref={airportRef}>
-                  Anaa Airport
-                </p>
-              </div>
-              <div className="rig">
-                <p className="text-sm font-bold">AAA</p>
-              </div>
-            </button>
-            <button
-              onClick={handleSelectFormAirport}
-              className="px-3 py-1 hover:bg-gray-200 flex items-center justify-between w-full border-b cursor-pointer "
-            >
-              <div className="left flex items-start flex-col">
-                <p className="text-xs font-bold ">
-                  <span ref={cityRef}>El Tarf</span>, Algeria
-                </p>
-                <p className="text-xs" ref={airportRef}>
-                  El Mellah Airport
-                </p>
-              </div>
-              <div className="rig">
-                <p className="text-sm font-bold">AAA</p>
-              </div>
-            </button>
+            <div className="flex max-h-80 overflow-y-auto  flex-col   border-t border-opacity-50 border-t-primary">
+              {/* {cityList?.map(({ city_name }) => {
+                return (
+                  <button
+                    onClick={handleSelectFormAirport}
+                    className="px-3 py-1 hover:bg-gray-200 flex items-center justify-between w-full border-b cursor-pointer "
+                  >
+                    <div className="left flex items-start flex-col">
+                      <p className="text-xs font-bold ">
+                        <span ref={cityRef}>{city_name}</span>, French Polynesia
+                      </p>
+                      <p className="text-xs" ref={airportRef}>
+                        Anaa Airport
+                      </p>
+                    </div>
+                    <div className="rig">
+                      <p className="text-sm font-bold">AAA</p>
+                    </div>
+                  </button>
+                );
+              })} */}
+              <button
+                onClick={handleSelectFormAirport}
+                className="px-3 py-1 hover:bg-gray-200 flex items-center justify-between w-full border-b cursor-pointer "
+              >
+                <div className="left flex items-start flex-col">
+                  <p className="text-xs font-bold ">
+                    <span ref={fromCityRef}>Anaa</span>, French Polynesia
+                  </p>
+                  <p className="text-xs" ref={fromAirportRef}>
+                    Anaa Airport
+                  </p>
+                </div>
+                <div className="rig">
+                  <p className="text-sm font-bold">AAA</p>
+                </div>
+              </button>
+              
+            </div>
           </div>
         </div>
       </div>
       {/* ----- To */}
       <div className={`relative w-1/2`}>
         <div
-          onClick={() => setDropDown2(!dropDown2)}
+          onClick={handleToDropdown}
           className={`w-full flex flex-col justify-center border rounded-[1rem] px-3 pl-7 py-1 cursor-pointer text-secondary ${
             dropDown2 ? "bg-gray-100" : ""
           }`}
@@ -176,25 +205,9 @@ const SelectField = ({ radiobuttonValue }) => {
             >
               <div className="left flex items-start flex-col">
                 <p className="text-xs font-bold ">
-                  <span ref={cityRef}>Anaa</span>, French Polynesia
+                  <span ref={toCityRef}>El Tarf</span>, Algeria
                 </p>
-                <p className="text-xs" ref={airportRef}>
-                  Anaa Airport
-                </p>
-              </div>
-              <div className="rig">
-                <p className="text-sm font-bold">AAA</p>
-              </div>
-            </button>
-            <button
-              onClick={handleSelectToAirport}
-              className="px-3 py-1 hover:bg-gray-200 flex items-center justify-between w-full border-b cursor-pointer "
-            >
-              <div className="left flex items-start flex-col">
-              <p className="text-xs font-bold ">
-                  <span ref={cityRef}>El Tarf</span>, Algeria
-                </p>
-                <p className="text-xs" ref={airportRef}>
+                <p className="text-xs" ref={toAirportRef}>
                   El Mellah Airport
                 </p>
               </div>
