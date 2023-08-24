@@ -96,7 +96,7 @@ const PersonCountField = () => {
         <div className="w-full px-4 py-2">
           <div className=" space-y-2 w-full pb-3 border-b border-b-primary">
             {totalPerson === 9 && (
-              <p class="text-red-500 text-xs font-bold leading-2">
+              <p className="text-red-500 text-xs font-bold leading-2">
                 Maximum 9 passengers are allowed per booking, Please make
                 another booking for additional passengers or try to reach us.{" "}
               </p>
@@ -104,71 +104,71 @@ const PersonCountField = () => {
 
             <h3 className="text-sm font-bold text-primary">Travelers</h3>
             <div className=" w-full flex items-center justify-between">
-              <div class="flex flex-col">
-                <h3 class="text-secondary">Adults</h3>
-                <p class="text-black text-xs">12 years +</p>
+              <div className="flex flex-col">
+                <h3 className="text-secondary">Adults</h3>
+                <p className="text-black text-xs">12 years +</p>
               </div>
-              <div class="flex items-center space-x-3 justify-between">
+              <div className="flex items-center space-x-3 justify-between">
                 <button
                   onClick={() => handleAdultsCount("minus")}
-                  class="bg-gray-200 rounded-full p-1"
+                  className="bg-gray-200 rounded-full p-1"
                 >
                   <HiOutlineMinusSm />
                 </button>
-                <p class="text-primary font-bold text-lg">{adultsCount}</p>
+                <p className="text-primary font-bold text-lg">{adultsCount}</p>
                 <button
                   onClick={() => handleAdultsCount("plus")}
-                  class="bg-gray-200 rounded-full p-1"
+                  className="bg-gray-200 rounded-full p-1"
                 >
                   <HiOutlinePlusSm />
                 </button>
               </div>
             </div>
-            <div class=" w-full flex items-center justify-between mt-2">
-              <div class="flex flex-col">
-                <h3 class="text-secondary">Children</h3>
-                <p class="text-black text-xs">2-12 years</p>
+            <div className=" w-full flex items-center justify-between mt-2">
+              <div className="flex flex-col">
+                <h3 className="text-secondary">Children</h3>
+                <p className="text-black text-xs">2-12 years</p>
               </div>
-              <div class="flex items-center space-x-3 justify-between">
+              <div className="flex items-center space-x-3 justify-between">
                 <button
                   onClick={() => handleChildrenCount("minus")}
-                  class="bg-gray-200 rounded-full p-1"
+                  className="bg-gray-200 rounded-full p-1"
                 >
                   <HiOutlineMinusSm />
                 </button>
-                <p class="text-primary font-bold text-lg">{childrenCount}</p>
+                <p className="text-primary font-bold text-lg">{childrenCount}</p>
                 <button
                   onClick={() => handleChildrenCount("plus")}
-                  class="bg-gray-200 rounded-full p-1"
+                  className="bg-gray-200 rounded-full p-1"
                 >
                   <HiOutlinePlusSm />
                 </button>
               </div>
             </div>
-            <div class=" w-full flex items-center justify-between mt-2">
-              <div class="flex flex-col">
-                <h3 class="text-secondary">Infant</h3>
-                <p class="text-black text-xs">Below 2 years</p>
+            <div className=" w-full flex items-center justify-between mt-2">
+              <div className="flex flex-col">
+                <h3 className="text-secondary">Infant</h3>
+                <p className="text-black text-xs">Below 2 years</p>
               </div>
-              <div class="flex items-center space-x-3 justify-between">
+              <div className="flex items-center space-x-3 justify-between">
                 <button
                   onClick={() => handleInfantCount("minus")}
-                  class="bg-gray-200 rounded-full p-1"
+                  className="bg-gray-200 rounded-full p-1"
                 >
                   <HiOutlineMinusSm />
                 </button>
-                <p class="text-primary font-bold text-lg">{infantCount}</p>
+                <p className="text-primary font-bold text-lg">{infantCount}</p>
                 <button
                   onClick={() => handleInfantCount("plus")}
-                  class="bg-gray-200 rounded-full p-1"
+                  className="bg-gray-200 rounded-full p-1"
                 >
                   <HiOutlinePlusSm />
                 </button>
               </div>
             </div>
           </div>
-          <div class="w-full pt-2">
-            <h3 class="text-sm font-bold text-primary">Booking Class</h3>
+          <div className="w-full pt-2">
+            <h3 className="text-sm font-bold text-primary">Booking Class</h3>
             <div className="flex flex-wrap gap-x-3">
               <RadioButton
                 label="Economy"
@@ -196,8 +196,8 @@ const PersonCountField = () => {
               />
             </div>
           </div>
-          <div class="w-full pb-2 flex items-center justify-end">
-            <button class="text-sm px-3 py-1 border border-primary rounded-md text-primary hover:bg-primary hover:text-white transition-all duration-200">
+          <div className="w-full pb-2 flex items-center justify-end">
+            <button className="text-sm px-3 py-1 border border-primary rounded-md text-primary hover:bg-primary hover:text-white transition-all duration-200">
               Done
             </button>
           </div>

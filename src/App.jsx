@@ -1,49 +1,36 @@
-import React, { useRef, useState } from "react";
-import axios from "axios";
-import RadioButton from "./Components/Commons/RadioButton/RadioButton";
-import SelectField from "./Components/Commons/SelectField/SelectField";
-import DateField from "./Components/Commons/DateField/DateField";
-import PersonCountField from "./Components/Commons/PersonCountField/PersonCountField";
+import React, { useEffect, useRef, useState } from "react";
 import {
   add,
   eachDayOfInterval,
   endOfMonth,
   format,
-  getDay,
-  isEqual,
-  isSameDay,
-  isSameMonth,
-  isToday,
   parse,
-  parseISO,
   startOfToday,
-  isBefore,
+  addDays,
 } from "date-fns";
+import { HiOutlinePlus } from "react-icons/hi";
 
+import RadioButton from "./Components/Commons/RadioButton/RadioButton";
+import SelectField from "./Components/Commons/SelectField/SelectField";
+import DateField from "./Components/Commons/DateField/DateField";
+import PersonCountField from "./Components/Commons/PersonCountField/PersonCountField";
 import Calendar from "./Components/Commons/Calendar/Calendar";
+
 const App = () => {
   const [selectedOption, setSelectedOption] = useState("oneWay");
   const [copiedMultyCity, setCopiedMultyCity] = useState([]);
+  const [dropDown, setDropDown] = useState(false);
   const multyCityRef = useRef(null);
+  const copyElementRef = useRef();
 
-  const handleOptionChange = (e) => {
-    setSelectedOption(e.target.value);
-  };
+  const today = startOfToday();
+  const newDate = addDays(new Date(), 1);
+  const [selectedDay, setSelectedDay] = useState(today);
+  const [affterDate, setAffterDate] = useState(newDate);
+  const [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
+  const firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
 
-  console.log(copiedMultyCity);
-
-  const handleCopiedMultyCity = () => {
-    const newMultyCityRef = multyCityRef.current.cloneNode(true);
-    setCopiedMultyCity([...copiedMultyCity, newMultyCityRef]);
-  };
-
-  let today = startOfToday();
-  let [selectedDay, setSelectedDay] = useState(today);
-
-  let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
-  let firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
-
-  let days = eachDayOfInterval({
+  const days = eachDayOfInterval({
     start: firstDayCurrentMonth,
     end: endOfMonth(firstDayCurrentMonth),
   });
@@ -57,6 +44,23 @@ const App = () => {
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
     setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
+
+  const handleOptionChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
+
+  const handleCopiedMultyCity = () => {
+    const newMultyCityRef = multyCityRef.current.innerHTML;
+    console.log(newMultyCityRef);
+    // copyElementRef.current.appendChild(newMultyCityRef);
+    // setCopiedMultyCity(...copiedMultyCity, newMultyCityRef);
+
+    const clonedElementsCopy = [...copiedMultyCity];
+    clonedElementsCopy.push(newMultyCityRef);
+    setCopiedMultyCity(clonedElementsCopy);
+  };
+
+  console.log(copiedMultyCity);
 
   return (
     <section className="container mt-16 bg-white">
@@ -99,55 +103,69 @@ const App = () => {
         {/* -- Select Field */}
         <div className="pt-4 pb-3">
           <div className="grid grid-cols-12 gap-3">
-            <SelectField />
-            <div className="relative col-span-12 md:col-span-6 lg:col-span-3">
-              <DateField
-                date={"defaultDate"}
-                selectedDay={selectedDay}
-                selectedOption={selectedOption}
-              />
-              <Calendar
-                previousMonth={previousMonth}
-                nextMonth={nextMonth}
-                currentMonth={currentMonth}
-                days={days}
-                format={format}
-                firstDayCurrentMonth={firstDayCurrentMonth}
-                selectedDay={selectedDay}
-                setSelectedDay={setSelectedDay}
-              />
-            </div>
+            <SelectField radiobuttonValue={selectedOption} />
+            <DateField
+              selectedDay={selectedDay}
+              selectedOption={selectedOption}
+              previousMonth={previousMonth}
+              nextMonth={nextMonth}
+              days={days}
+              firstDayCurrentMonth={firstDayCurrentMonth}
+              setSelectedDay={setSelectedDay}
+            />
 
             <PersonCountField />
           </div>
         </div>
         {/* --- Copyed elements */}
-        {/* {copiedMultyCity.length && copiedMultyCity.map((d)=> <div>{d}</div> )} */}
+        {selectedOption === "multyCity" &&
+          copiedMultyCity.map((html, index) => (
+            <div className="pb-3" key={index} dangerouslySetInnerHTML={{ __html: html }} />
+          ))}
+
         {/* -- Default field for multy city radio button */}
         {selectedOption === "multyCity" && (
           <div ref={multyCityRef} className=" pb-4">
             <div className="grid grid-cols-12 gap-3">
-              <SelectField />
-              <DateField selectedOption={selectedOption} />
+              <SelectField radiobuttonValue={selectedOption} />
+              <div
+                onClick={() => setDropDown(!dropDown)}
+                className={`cursor-pointer relative flex flex-col justify-center col-span-12 md:col-span-6 lg:col-span-3 border rounded-[1rem] px-3 py-1  text-secondary ${
+                  dropDown ? "bg-gray-100" : ""
+                }`}
+              >
+                <div>
+                  <small className="text-sm">Departure</small>
+
+                  <h2 className="text-xl  leading-8   font-medium">
+                    Select a date
+                  </h2>
+                </div>
+                <div
+                  className={`absolute border-t  w-[20rem]  z-10 bg-white drop-shadow-2xl cursor-default rounded-md  top-full -left-7  md:left-0 ${
+                    dropDown ? "block" : "hidden"
+                  }`}
+                >
+                  <Calendar
+                    previousMonth={previousMonth}
+                    nextMonth={nextMonth}
+                    currentMonth={currentMonth}
+                    days={days}
+                    format={format}
+                    firstDayCurrentMonth={firstDayCurrentMonth}
+                    selectedDay={selectedDay}
+                    setSelectedDay={setSelectedDay}
+                  />
+                </div>
+              </div>
+
               <div className="flex flex-col justify-center border rounded-[1rem] px-3 py-1 cursor-pointer text-secondary col-span-12 md:col-span-6 lg:col-span-3">
-                <div class="mx-4 cursor-pointer w-max ">
+                <div className="mx-4 cursor-pointer w-max ">
                   <p
                     onClick={handleCopiedMultyCity}
-                    class="text-sm flex items-center font-bold text-primary hover:text-white transition-all duration-200 hover:bg-primary  px-3   py-1 border rounded-md border-primary "
+                    className="text-sm flex items-center font-bold text-primary hover:text-white transition-all duration-200 hover:bg-primary  px-3   py-1 border rounded-md border-primary "
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      aria-hidden="true"
-                      class="h-5 w-5 mr-2"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
-                        clip-rule="evenodd"
-                      ></path>
-                    </svg>{" "}
+                    <HiOutlinePlus />
                     Add Another city
                   </p>
                 </div>

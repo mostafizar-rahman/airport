@@ -1,42 +1,35 @@
 import React, { useState } from "react";
 import { HiOutlineArrowLeft, HiOutlineArrowRight } from "react-icons/hi";
 import {
-  add,
-  eachDayOfInterval,
-  endOfMonth,
-  format,
   getDay,
   isEqual,
-  isSameDay,
   isSameMonth,
   isToday,
-  parse,
-  parseISO,
-  startOfToday,
   isBefore,
+  format
 } from "date-fns";
 
 const Calendar = ({
   previousMonth,
   nextMonth,
   days,
-  format,
   firstDayCurrentMonth,
   selectedDay,
   setSelectedDay,
 }) => {
-  const current = new Date(); // Current date and time
-  const oneDayAgo = new Date(current);
-  oneDayAgo.setDate(current.getDate() - 1);
+  const current = new Date(); 
+  const oneDayBefore = new Date(current);
+  oneDayBefore.setDate(current.getDate() - 1);
+
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
 
   return (
-    <div class="absolute border-t  w-[20rem]  z-10 bg-white drop-shadow-2xl cursor-default rounded-md  top-full -left-7  md:left-0">
-      <div >
-        <div className="md:pr-14">
+    
+      <div className="p-4" >
+        <div className="">
           <div className="flex items-center">
             <h2 className="flex-auto font-semibold text-gray-900">
               {format(firstDayCurrentMonth, "MMMM yyyy")}
@@ -77,14 +70,15 @@ const Calendar = ({
                 )}
               >
                 <button
-                  disabled={isBefore(day, oneDayAgo) && true}
+                  disabled={isBefore(day, oneDayBefore) && true}
                   type="button"
                   onClick={() => setSelectedDay(day)}
                   className={classNames(
+                    isBefore(day, oneDayBefore) && "bg-gray-200 cursor-not-allowed",
                     isEqual(day, selectedDay) && "text-white",
                     !isEqual(day, selectedDay) &&
                       isToday(day) &&
-                      "text-red-500",
+                      "text-primary",
                     !isEqual(day, selectedDay) &&
                       !isToday(day) &&
                       isSameMonth(day, firstDayCurrentMonth) &&
@@ -93,8 +87,8 @@ const Calendar = ({
                       !isToday(day) &&
                       !isSameMonth(day, firstDayCurrentMonth) &&
                       "text-gray-400",
-                    isEqual(day, selectedDay) && isToday(day) && "bg-red-500",
-                    isEqual(day, selectedDay) && !isToday(day) && "bg-gray-900",
+                    isEqual(day, selectedDay) && isToday(day) && "bg-primary",
+                    isEqual(day, selectedDay) && !isToday(day) && "bg-primary",
                     !isEqual(day, selectedDay) && "hover:bg-gray-200",
                     (isEqual(day, selectedDay) || isToday(day)) &&
                       "font-semibold",
@@ -110,7 +104,7 @@ const Calendar = ({
           </div>
         </div>
       </div>
-    </div>
+   
   );
 };
 
